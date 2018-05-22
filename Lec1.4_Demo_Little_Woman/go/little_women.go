@@ -28,13 +28,27 @@ func main() {
 		log.Fatalf("can not read file %s: %v", fileName, err)
 	}
 
-	chapters := splitChapter(string(dat))
+	chapters := splitChapter(string(dat))[1:]
 
 	fmt.Printf("There are %d chapters.\n", len(chapters))
 
 	cntChristmas := countWord(chapters, "Christmas")
-
 	fmt.Printf("Count \"Chistmas\": %v\n", cntChristmas)
+
+	cntJo := countWord(chapters, "Jo")
+	fmt.Printf("Count \"Jo\": %v\n", cntJo)
+
+	cntMeg := countWord(chapters, "Meg")
+	fmt.Printf("Count \"Meg\": %v\n", cntMeg)
+
+	cntAmy := countWord(chapters, "Amy")
+	fmt.Printf("Count \"Amy\": %v\n", cntAmy)
+
+	cntBeth := countWord(chapters, "Beth")
+	fmt.Printf("Count \"Beth\": %v\n", cntBeth)
+
+	cntLaurie := countWord(chapters, "Laurie")
+	fmt.Printf("Count \"Laurie\": %v\n", cntLaurie)
 }
 
 func countWord(chapters []string, word string) []int {
