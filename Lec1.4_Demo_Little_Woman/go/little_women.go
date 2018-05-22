@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -27,7 +28,13 @@ func main() {
 		log.Fatalf("can not read file %s: %v", fileName, err)
 	}
 
-	fmt.Println(string(dat))
+	chapters := splitChapter(string(dat))
+
+	fmt.Printf("There are %d chapters.\n", len(chapters))
+}
+
+func splitChapter(text string) []string {
+	return strings.Split(text, "CHAPTER")
 }
 
 func getLittleWoman(path string) error {
