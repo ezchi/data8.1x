@@ -31,6 +31,20 @@ func main() {
 	chapters := splitChapter(string(dat))
 
 	fmt.Printf("There are %d chapters.\n", len(chapters))
+
+	cntChristmas := countWord(chapters, "Christmas")
+
+	fmt.Printf("Count \"Chistmas\": %v\n", cntChristmas)
+}
+
+func countWord(chapters []string, word string) []int {
+	counters := make([]int, len(chapters))
+
+	for i, c := range chapters {
+		counters[i] = strings.Count(c, word)
+	}
+
+	return counters
 }
 
 func splitChapter(text string) []string {
