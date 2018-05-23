@@ -9,6 +9,11 @@ import (
 	"net/http"
 	"os"
 	"strings"
+
+	"gonum.org/v1/plot"
+	"gonum.org/v1/plot/plotter"
+	"gonum.org/v1/plot/plotutil"
+	"gonum.org/v1/plot/vg"
 )
 
 func main() {
@@ -49,6 +54,47 @@ func main() {
 
 	cntLaurie := countWord(chapters, "Laurie")
 	fmt.Printf("Count \"Laurie\": %v\n", cntLaurie)
+
+	// Plot
+	p, err := plot.New()
+
+	if err != nil {
+		log.Fatalf("can not create plot: %v", err)
+	}
+
+	p.Title.Text = "Plotutil example"
+	p.X.Label.Text = "X"
+	p.Y.Label.Text = "Y"
+
+	err = plotutil.AddLinePoints(p,
+		"Jo", linePoints(cntJo),
+		"Meg", linePoints(cntMeg),
+		"Amy", linePoints(cntAmy),
+		"Beth", linePoints(cntBeth),
+		"Laurie", linePoints(cntLaurie))
+
+	if err != nil {
+		log.Fatalf("can not add line points: %v", err)
+	}
+
+	// Save the plot to a PNG file.
+	if err := p.Save(10*vg.Inch, 10*vg.Inch, "charactor-name-plot.png"); err != nil {
+		log.Fatalf("can not save plot: %v", err)
+	}
+}
+
+func linePoints(d []int) plotter.XYs {
+	pts := make(plotter.XYs, len(d))
+	var sum float64
+
+	for i := range pts {
+		sum += float64(d[i])
+
+		pts[i].X = float64(i)
+		pts[i].Y = sum
+	}
+
+	return pts
 }
 
 func countWord(chapters []string, word string) []int {
