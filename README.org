@@ -1,3 +1,7 @@
 
 * Overview
-  Study notes for [[https://courses.edx.org/courses/course-v1:BerkeleyX+Data8.1x+1T2018/course/][Foundations of Data Science: Computational Thinking with Python]].
+  Study notes for [[https://courses.edx.org/courses/course-v1:BerkeleyX+Data8.1x+1T2018/course/][Foundations of Data Science: Computational Thinking with
+  Python]] and try to rewrite code with Go.
+
+* Chapters
+** Lec 1.4 Demo: Little Women
