@@ -55,6 +55,9 @@ func main() {
 	cntLaurie := countWord(chapters, "Laurie")
 	fmt.Printf("Count \"Laurie\": %v\n", cntLaurie)
 
+	cntPeriod := countWord(chapters, ".")
+	fmt.Printf("Count \".\": %v\n", cntPeriod)
+
 	// Plot
 	p, err := plot.New()
 
@@ -67,11 +70,11 @@ func main() {
 	p.Y.Label.Text = "Y"
 
 	err = plotutil.AddLinePoints(p,
-		"Jo", linePoints(cntJo),
-		"Meg", linePoints(cntMeg),
-		"Amy", linePoints(cntAmy),
-		"Beth", linePoints(cntBeth),
-		"Laurie", linePoints(cntLaurie))
+		"Jo", accumulateLinePoints(cntJo),
+		"Meg", accumulateLinePoints(cntMeg),
+		"Amy", accumulateLinePoints(cntAmy),
+		"Beth", accumulateLinePoints(cntBeth),
+		"Laurie", accumulateLinePoints(cntLaurie))
 
 	if err != nil {
 		log.Fatalf("can not add line points: %v", err)
@@ -81,9 +84,61 @@ func main() {
 	if err := p.Save(10*vg.Inch, 10*vg.Inch, "charactor-name-plot.png"); err != nil {
 		log.Fatalf("can not save plot: %v", err)
 	}
+
+	p, err = scatterPlot(lengthVSPeriods(chapters, cntPeriod), "Chapter length vs Num of periods", "num of periods", "chapter length", "chapter-length-vs-num-of-period.png")
+
+	if err != nil {
+		log.Fatalf("can not plot chapter length vs nub of periods: %v\n", err)
+	}
 }
 
-func linePoints(d []int) plotter.XYs {
+func lengthVSPeriods(c []string, p []int) plotter.XYs {
+	pts := make(plotter.XYs, len(c))
+
+	for i := range pts {
+		pts[i].X = float64(p[i])
+		pts[i].Y = float64(len(c[i]))
+	}
+	return pts
+}
+func scatterPlot(xys plotter.XYer, title, labelX, labelY, path string) (*plot.Plot, error) {
+	p, err := plot.New()
+
+	if err != nil {
+		return nil, err
+	}
+
+	p.Title.Text = title
+	p.X.Label.Text = labelX
+	p.Y.Label.Text = labelY
+
+	p.Add(plotter.NewGrid())
+
+	s, err := plotter.NewScatter(xys)
+	if err != nil {
+		return p, err
+	}
+
+	p.Add(s)
+	// Save the plot to a PNG file.
+	if err := p.Save(4*vg.Inch, 4*vg.Inch, path); err != nil {
+		return p, err
+	}
+	return p, nil
+}
+
+func convertToXY(d []int) plotter.XYs {
+	pts := make(plotter.XYs, len(d))
+
+	for i := range pts {
+		pts[i].X = float64(i)
+		pts[i].Y = float64(d[i])
+	}
+
+	return pts
+}
+
+func accumulateLinePoints(d []int) plotter.XYs {
 	pts := make(plotter.XYs, len(d))
 	var sum float64
 
